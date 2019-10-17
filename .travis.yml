@@ -13,7 +13,7 @@ install: []
 before_script:
   - LATEST_TAG=$(curl -s https://api.github.com/repos/$REPO/tags  | jq -r '.[0].name')
   - VERSION="${LATEST_TAG//[v]}"
-  - wget -O rp-archiver.tar.gz "https://github.com/$REPO/releases/download/v$VERSION/rp-archiver_$VERSION_linux_amd64.tar.gz";
+  - wget -O rp-archiver.tar.gz "https://github.com/$REPO/releases/download/v$VERSION/rp-archiver_${VERSION}_linux_amd64.tar.gz";
   - tar -xf rp-archiver.tar.gz
 
 script:
