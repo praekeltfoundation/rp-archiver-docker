@@ -27,6 +27,6 @@ before_deploy:
 deploy:
   provider: script
   skip_cleanup: true
-  script: dcd --tag-version "$VERSION" --tag-semver --tag-latest "$IMAGE"
+  script: dcd --version "$VERSION" --version-semver --version-latest "$IMAGE"
   on:
     branch: master
