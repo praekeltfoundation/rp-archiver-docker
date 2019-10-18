@@ -1,0 +1,32 @@
+language: python
+services:
+  - docker
+
+env:
+  global:
+    - REGISTRY_USER=rapidproautomation
+    - IMAGE="praekeltfoundation/rp-archiver" REPO="nyaruka/rp-archiver"
+    - secure: "LtwYBItg+zbGSruWwkuYPHScIQ5ZSxQezm4ZC40nvoABHOysgeF+WgXaq/G+CTDsr2gIxho2wp7M2b5ADhGQiz5DIqGVB40bpLOnuGu+DHDj6XygIcvRbQVlKLmPzNCJxziB6Q9nVblvLzVCsSPkDHU/A3l/lZgdw5uWCmNjaM9Dinj1ggMMhxG02M0NNtkpi2Nei7KWj1SkrZlT8MuLmPgNsd45CdFOe2Mi97YsjfV6S+of/JdL2UIEhpShKJjnBUc0YVDFzcPt8PDYCWa0nVmNuiifZaXBZnr0bjIwnrkqbNKJblnWIDBSGDD1cXNnGVpa1RG3tqOdVcFSZHgMq4lL5TNqlL+2v5yzSVyoAHZBsuSoHTF0enrhFWZvYWtrqovn+3ZuOK5cpb5jNGG/elJms1RvhLXmJTy7cvgODimSr0CsKRJW6VkM6nMyIKIhGu7OJX36rQAj0g60UpA+lgTK1Rem6numEqvfwM3nB3B1eob8WPPxc8USlEmUjyqE1mY/XwQcAbT+dbdGjRQR4rC+nl7vZSGFASnosXk/7NGkk4mJcOcSLUrKxRICBH39+VqwEUrvdvILa7sS0+gXaIr5tZ+I8syQnpj2/U7Ho1MC76ETdInrlkcazrIgXvMgDPW90TAcMbEPMHiLWRaR9dsJY4P3laDuRwhELxWrbys="
+
+install: []
+
+before_script:
+  - LATEST_TAG=$(curl -s https://api.github.com/repos/$REPO/tags  | jq -r '.[0].name')
+  - VERSION="${LATEST_TAG//[v]}"
+  - wget -O rp-archiver.tar.gz "https://github.com/$REPO/releases/download/v$VERSION/rp-archiver_${VERSION}_linux_amd64.tar.gz";
+  - tar -xf rp-archiver.tar.gz
+
+script:
+  - docker pull "$IMAGE" || true
+  - docker build --pull --cache-from "$IMAGE" --tag "$IMAGE" .
+
+before_deploy:
+  - pip install docker-ci-deploy==0.3.0
+  - echo -n $REGISTRY_PASS | docker login -u "$REGISTRY_USER" --password-stdin
+
+deploy:
+  provider: script
+  skip_cleanup: true
+  script: dcd --tage-version "$VERSION" --tag-semver --tag-latest "$IMAGE"
+  on:
+    branch: master
