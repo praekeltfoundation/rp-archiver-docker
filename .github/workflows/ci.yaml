@@ -15,7 +15,7 @@ jobs:
       PGPASSWORD: temba
     strategy:
       matrix:
-        ARCHIVER_VERSION: ["6.0.3", "6.2.0", "6.4.0", "7.0.0"]
+        ARCHIVER_VERSION: ["6.4.0", "7.0.0"]
     steps:
       - uses: actions/checkout@v2
       - uses: docker/setup-buildx-action@v1
