@@ -27,6 +27,8 @@ jobs:
           postgresql user: temba
           postgresql password: temba
       - name: FakeS3
+        env:
+          SERVICES: s3
         run: |
           pip install localstack awscli-local
           localstack start -d
@@ -44,7 +46,7 @@ jobs:
             ARCHIVER_VERSION=${{matrix.ARCHIVER_VERSION}}
       - name: Test image
         run: |
-          docker run --name archiver --env-file docker.envfile --link postgis --link s3 --publish 8080:8080 --detach archiver
+          docker run --name archiver --env-file docker.envfile --link postgis --link localstack_main --publish 8080:8080 --detach archiver
           timeout ${{env.GREP_TIMEOUT}} grep -m 1 's3 bucket ok' <(docker logs --follow archiver 2>&1)
           timeout ${{env.GREP_TIMEOUT}} grep -m 1 'Sleeping until next UTC day' <(docker logs --follow archiver 2>&1)
       - name: debug outputs

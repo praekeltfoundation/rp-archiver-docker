@@ -1,4 +1,4 @@
 ARCHIVER_DB=postgres://temba:temba@postgis/temba?sslmode=disable
 ARCHIVER_S3_DISABLE_SSL=true
 ARCHIVER_S3_FORCE_PATH_STYLE=true
-ARCHIVER_S3_ENDPOINT=http://localhost:4566
+ARCHIVER_S3_ENDPOINT=http://localstack_main:4566
