@@ -47,7 +47,7 @@ jobs:
             ARCHIVER_VERSION=${{matrix.ARCHIVER_VERSION}}
       - name: Create postgresql tables
         run: |
-          psql -d temba -U temba -f ci/database.sql
+          psql -h localhost -d temba -U postgres --no-password -f ci/database.sql
       - name: Test image
         run: |
           docker run --name archiver --env-file docker.envfile --link postgis --link localstack_main --publish 8080:8080 --detach archiver
