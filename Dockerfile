@@ -4,7 +4,7 @@ ARG ARCHIVER_REPO
 ARG ARCHIVER_VERSION
 
 RUN apt update && apt install -y wget
-RUN wget -q -O archiver.tar.gz "https://github.com/$ARCHIVER_REPO/releases/download/v${ARCHIVER_VERSION}/archiver_${ARCHIVER_VERSION}_linux_amd64.tar.gz"
+RUN wget -q -O archiver.tar.gz "https://github.com/$ARCHIVER_REPO/releases/download/v${ARCHIVER_VERSION}/rp-archiver_${ARCHIVER_VERSION}_linux_amd64.tar.gz"
 RUN mkdir archiver
 RUN tar -xzC archiver -f archiver.tar.gz
 
