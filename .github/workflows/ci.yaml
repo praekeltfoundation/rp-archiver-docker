@@ -15,7 +15,7 @@ jobs:
       PGPASSWORD: temba
     strategy:
       matrix:
-        ARCHIVER_VERSION: ["6.4.0", "7.0.0"]
+        ARCHIVER_VERSION: ["6.4.0", "7.0.0", "7.2.0"]
     steps:
       - uses: actions/checkout@v2
       - uses: docker/setup-buildx-action@v1
@@ -90,4 +90,4 @@ jobs:
           context: .
           build-args: |
             ARCHIVER_REPO=${{env.ARCHIVER_REPO}}
-            ARCHIVER_VERSION=${{matrix.ARCHIVER_VERSION}} 
+            ARCHIVER_VERSION=${{matrix.ARCHIVER_VERSION}}
