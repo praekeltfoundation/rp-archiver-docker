@@ -15,7 +15,7 @@ jobs:
       PGPASSWORD: temba
     strategy:
       matrix:
-        ARCHIVER_VERSION: ["6.4.0", "7.0.0", "7.2.0"]
+        ARCHIVER_VERSION: ["8.0.0"]
     steps:
       - uses: actions/checkout@v2
       - uses: docker/setup-buildx-action@v1
@@ -50,9 +50,11 @@ jobs:
           psql -h localhost -d temba -U temba -f ci/database.sql
       - name: Test image
         run: |
-          docker run --name archiver --env-file docker.envfile --link postgis --link localstack_main --publish 8080:8080 --detach archiver
+          docker run --name archiver --env-file docker.envfile --link postgis --link localstack-main --publish 8080:8080 --detach archiver
+          timeout ${{env.GREP_TIMEOUT}} grep -m 1 'db ok' <(docker logs --follow archiver 2>&1)
           timeout ${{env.GREP_TIMEOUT}} grep -m 1 's3 bucket ok' <(docker logs --follow archiver 2>&1)
-          timeout ${{env.GREP_TIMEOUT}} grep -m 1 'Sleeping until next UTC day' <(docker logs --follow archiver 2>&1)
+          timeout ${{env.GREP_TIMEOUT}} grep -m 1 'tmp file access ok' <(docker logs --follow archiver 2>&1)
+          timeout ${{env.GREP_TIMEOUT}} grep -m 1 'sleeping until next archival' <(docker logs --follow archiver 2>&1)
           grep -v 'error' <(docker logs archiver 2>&1)
       - name: debug outputs
         if: always()
@@ -60,6 +62,7 @@ jobs:
           docker ps
           docker images
           docker logs archiver
+          docker logs localstack-main
       - name: Create image tags
         uses: docker/metadata-action@v3
         id: tags

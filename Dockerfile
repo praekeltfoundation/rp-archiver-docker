@@ -8,7 +8,7 @@ RUN wget -q -O archiver.tar.gz "https://github.com/$ARCHIVER_REPO/releases/downl
 RUN mkdir archiver
 RUN tar -xzC archiver -f archiver.tar.gz
 
-FROM debian:stretch-slim
+FROM debian:bullseye-slim
 
 RUN set -ex; \
     addgroup --system archiver; \
