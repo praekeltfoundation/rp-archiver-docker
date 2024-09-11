@@ -50,8 +50,7 @@ jobs:
           psql -h localhost -d temba -U temba -f ci/database.sql
       - name: Test image
         run: |
-          docker ps
-          docker run --name archiver --env-file docker.envfile --link postgis --link localstack_main --publish 8080:8080 --detach archiver
+          docker run --name archiver --env-file docker.envfile --link postgis --link localstack-main --publish 8080:8080 --detach archiver
           timeout ${{env.GREP_TIMEOUT}} grep -m 1 's3 bucket ok' <(docker logs --follow archiver 2>&1)
           timeout ${{env.GREP_TIMEOUT}} grep -m 1 'Sleeping until next UTC day' <(docker logs --follow archiver 2>&1)
           grep -v 'error' <(docker logs archiver 2>&1)
