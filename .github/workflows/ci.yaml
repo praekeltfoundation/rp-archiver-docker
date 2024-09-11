@@ -60,6 +60,7 @@ jobs:
           docker ps
           docker images
           docker logs archiver
+          docker logs localstack-main
       - name: Create image tags
         uses: docker/metadata-action@v3
         id: tags
